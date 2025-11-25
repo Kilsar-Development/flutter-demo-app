@@ -5,17 +5,15 @@ class ApiService {
   final Dio _dio;
   static const String baseUrl = 'https://jsonplaceholder.typicode.com';
 
-  ApiService()
-      : _dio = Dio(BaseOptions(
-          baseUrl: baseUrl,
-          connectTimeout: const Duration(seconds: 5),
-          receiveTimeout: const Duration(seconds: 3),
-        ));
+  ApiService() : _dio = Dio(BaseOptions(
+    baseUrl: baseUrl,
+    connectTimeout: const Duration(seconds: 5),
+    receiveTimeout: const Duration(seconds: 3),
+  ));
 
   Future<List<User>> getUsers() async {
     try {
       final response = await _dio.get('/users');
-
       if (response.statusCode == 200) {
         final List<dynamic> data = response.data;
         return data.map((json) => User.fromJson(json)).toList();
@@ -32,7 +30,6 @@ class ApiService {
   Future<User> getUserById(int id) async {
     try {
       final response = await _dio.get('/users/$id');
-
       if (response.statusCode == 200) {
         return User.fromJson(response.data);
       } else {

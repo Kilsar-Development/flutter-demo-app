@@ -1,5 +1,5 @@
 import 'package:get_it/get_it.dart';
-import '../../data/services/api_service.dart';
+import 'api_service.dart';
 
 final getIt = GetIt.instance;
 

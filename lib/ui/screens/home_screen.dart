@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import '../../core/di/service_locator.dart';
-import '../../data/models/user.dart';
-import '../../data/services/api_service.dart';
+import '../../services/service_locator.dart';
+import '../../models/user.dart';
+import '../../services/api_service.dart';
 import '../widgets/user_card.dart';
 import 'user_detail_screen.dart';
 
@@ -14,7 +14,6 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   final ApiService _apiService = getIt<ApiService>();
-
   List<User> _users = [];
   bool _isLoading = false;
   String? _error;
@@ -30,7 +29,6 @@ class _HomeScreenState extends State<HomeScreen> {
       _isLoading = true;
       _error = null;
     });
-
     try {
       final users = await _apiService.getUsers();
       setState(() {
@@ -46,12 +44,7 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   void _navigateToUserDetail(User user) {
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => UserDetailScreen(userId: user.id),
-      ),
-    );
+    Navigator.push(context, MaterialPageRoute(builder: (context) => UserDetailScreen(userId: user.id)));
   }
 
   @override
@@ -75,54 +68,31 @@ class _HomeScreenState extends State<HomeScreen> {
 
   Widget _buildBody() {
     if (_isLoading) {
-      return const Center(
-        key: Key('loading_indicator'),
-        child: CircularProgressIndicator(),
-      );
+      return const Center(key: Key('loading_indicator'), child: CircularProgressIndicator());
     }
-
     if (_error != null) {
       return Center(
         key: const Key('error_message'),
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            const Icon(
-              Icons.error_outline,
-              color: Colors.red,
-              size: 60,
-            ),
+            const Icon(Icons.error_outline, color: Colors.red, size: 60),
             const SizedBox(height: 16),
-            Text(
-              'Error loading users',
-              style: Theme.of(context).textTheme.titleLarge,
-            ),
+            Text('Error loading users', style: Theme.of(context).textTheme.titleLarge),
             const SizedBox(height: 8),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 32),
-              child: Text(
-                _error!,
-                textAlign: TextAlign.center,
-                style: const TextStyle(color: Colors.grey),
-              ),
+              child: Text(_error!, textAlign: TextAlign.center, style: const TextStyle(color: Colors.grey)),
             ),
             const SizedBox(height: 16),
-            ElevatedButton(
-              onPressed: _loadUsers,
-              child: const Text('Retry'),
-            ),
+            ElevatedButton(onPressed: _loadUsers, child: const Text('Retry')),
           ],
         ),
       );
     }
-
     if (_users.isEmpty) {
-      return const Center(
-        key: Key('empty_state'),
-        child: Text('No users found'),
-      );
+      return const Center(key: Key('empty_state'), child: Text('No users found'));
     }
-
     return RefreshIndicator(
       onRefresh: _loadUsers,
       child: ListView.builder(
@@ -131,11 +101,7 @@ class _HomeScreenState extends State<HomeScreen> {
         itemCount: _users.length,
         itemBuilder: (context, index) {
           final user = _users[index];
-          return UserCard(
-            key: Key('user_card_${user.id}'),
-            user: user,
-            onTap: () => _navigateToUserDetail(user),
-          );
+          return UserCard(key: Key('user_card_${user.id}'), user: user, onTap: () => _navigateToUserDetail(user));
         },
       ),
     );
