@@ -1,73 +1,136 @@
 # Flutter Demo App
 
-Simple Flutter app for QA testing. Shows users and their details.
+Simple app for QA testing that shows a list of users and their details.
+
+---
+
+## What It Does
+
+Pulls user data from JSONPlaceholder API and displays it in a clean interface. Built with minimal dependencies following our standard architecture.
+
+---
+
+## Screenshots
+
+### Mobile (iOS)
+![iOS Screenshot](screenshots/mobile.png)
+
+### Web
+![Web Screenshot](screenshots/web.png)
+
+---
+
+## Architecture
+
+Uses clean architecture with separation of concerns:
+
+- **models/** - Data models with JSON serialization (generated files in ~gen/)
+- **services/** - API calls and dependency injection
+- **ui/** - All screens and widgets
+
+---
 
 ## Install Flutter
 
-Mac:
-brew install flutter
-flutter doctor
+**Mac:**
+flutter install via homebrew then run flutter doctor
 
+**Windows/Linux:**
 
-Windows/Linux: Download from flutter.dev
+Get it from flutter.dev
 
-Fix issues that flutter doctor shows. Need Xcode for iOS and Android Studio for Android.
+---
 
-## Run This Project
+## Setup
 
-First time:
+First time running:
+
+bash:
 cd flutter_demo_app
 flutter pub get
-flutter pub run build_runner build --delete-conflicting-outputs
+dart run build_runner build --delete-conflicting-outputs
 
+---
 
-Web:
+## Run It
 
+**Web:**
+bash:
 flutter run -d chrome
 
 
-iOS:
+**iOS:**
+bash:
 flutter run -d ios
 
 
-Android:
+**Android:**
+bash:
 flutter run -d android
 
+---
 
-## For QA Engineers
+## For QA Testing
 
-App fetches 10 users from an API. Tap a user to see details. Pull down or tap refresh button to reload.
+The app loads 10 users on launch. Tap any user to see their full details. Pull down to refresh or use the refresh button in the top right.
 
-Test keys for Appium:
-- user_list
-- user_card_1, user_card_2, etc
-- user_name_1, user_email_1, etc
-- refresh_button
-- loading_indicator
-- error_message
-- user_detail_content
-- name_value, email_value, phone_value
+### Test Keys for Appium
 
-Basic test: launch app, wait for list, tap user, check details, go back. Test refresh and airplane mode for errors.
+- `user_list`
+- `user_card_1`, `user_card_2`, etc
+- `user_name_1`, `user_email_1`, etc
+- `refresh_button`
+- `loading_indicator`
+- `error_message`
+- `user_detail_content`
+- `name_value`, `email_value`, `phone_value`
 
-Use the keys instead of xpath. Configure your driver properly and find elements by key.
+### Test Flow
 
-API is jsonplaceholder.typicode.com. Free testing API, always returns same 10 users.
+Basic test flow: launch app, wait for list to load, tap a user, verify details show, go back. Also test the refresh functionality and error handling by turning on airplane mode.
 
-## Structure
+Use the key values instead of xpath. Make sure your Appium driver is configured correctly.
+
+**API:** jsonplaceholder.typicode.com - free testing API that always returns the same 10 users.
+
+---
+
+## Project Structure
 
 
 lib/
+  models/
+    ~gen/user.g.dart
+    user.dart
+  services/
+    api_service.dart
+    service_locator.dart
+  ui/
+    screens/
+      home_screen.dart
+      user_detail_screen.dart
+    widgets/
+      user_card.dart
   main.dart
-  core/di/
-  data/models/
-  data/services/
-  presentation/screens/
-  presentation/widgets/
 
+
+---
 
 ## Dependencies
 
-Three packages: dio, get_it, json_annotation
+Only three packages:
 
-Run build_runner after pulling changes or if you modify the User model.
+- **dio** - HTTP requests
+- **get_it** - Dependency injection
+- **json_annotation** - JSON serialization
+
+---
+
+## Regenerating Code
+
+If you modify the User model, run:
+
+bash:
+dart run build_runner build --delete-conflicting-outputs
+
+This regenerates the files in the ~gen folder.
